@@ -36,7 +36,7 @@ jobs:
 
       - name: Upload test cases to minio
         run: |
-          docker-compose run --no-deps provision python3 -m boptest_submit ./testcases/testcase1
+          docker-compose run --no-deps provision python3 -m boptest_submit ./boptest/testcases/testcase1
           curl http://localhost/testcases
 
       - name: Wait for web server
@@ -57,7 +57,7 @@ jobs:
           ls -l 
           tree
           pwd
-          PYTHONPATH=$GITHUB_WORKSPACE python examples/python/testcase1.py 
+          PYTHONPATH=$GITHUB_WORKSPACE python boptest/examples/python/testcase1.py 
 
       - name: Dump docker logs on failure
         if: failure()
