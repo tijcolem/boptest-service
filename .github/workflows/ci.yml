@@ -54,10 +54,7 @@ jobs:
           PYTHONPATH=$GITHUB_WORKSPACE
           echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
           # Storing PYTHONPATH above doesn't work for python so setting it below at run 
-          ls -l 
-          tree
-          pwd
-          PYTHONPATH=$GITHUB_WORKSPACE python boptest/examples/python/testcase1.py 
+          cd boptest && PYTHONPATH=$PWD python boptest/examples/python/testcase1.py 
 
       - name: Dump docker logs on failure
         if: failure()
