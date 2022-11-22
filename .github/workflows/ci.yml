@@ -71,7 +71,7 @@ jobs:
         
 #      - name: Publish docker images to GitHub Registry
 #        if: |
-#          github.ref == 'refs/heads/boptest-service' ||
+#          github.ref == 'refs/heads/develop' ||
 #          contains(github.ref, 'refs/tags') 
 #        shell: bash
 #        run: ci/publish_to_github.sh
@@ -86,7 +86,7 @@ jobs:
 
       - name: Publish docker images to Docker Hub
         if: |
-          github.ref == 'refs/heads/boptest-service' ||
+          github.ref == 'refs/heads/develop' ||
           contains(github.ref, 'refs/tags') 
         shell: bash
         run: ci/publish_to_docker.sh
