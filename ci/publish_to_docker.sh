@@ -1,7 +1,9 @@
 # load .env defines in root of repo
 export $(egrep -v '^#' .env | xargs)
-export DOCKER_HUB_WEB_REGISTRY_URI=tijcolem/boptest-web
-export DOCKER_HUB_WORKER_REGISTRY_URI=tijcolem/boptest-worker
+export WEB_REGISTRY_URI=boptest-service-web
+export WORKER_REGISTRY_URI=boptest-service-worker
+export DOCKER_HUB_WEB_REGISTRY_URI=nrel/boptest-web
+export DOCKER_HUB_WORKER_REGISTRY_URI=nrel/boptest-worker
 
 if [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
     export VERSION_TAG="develop"
@@ -16,6 +18,7 @@ fi
 
  if [[ "${VERSION_TAG}" == "develop" ]] || [[ "${VERSION_TAG}" =~ ^v[0-9].* ]] || [[ "${VERSION_TAG}" == "experimental" ]] ; then
 
+    docker image ls
     docker tag ${WEB_REGISTRY_URI}:latest ${DOCKER_HUB_WEB_REGISTRY_URI}:${VERSION_TAG}; (( exit_status = exit_status || $? ))
     docker tag ${WORKER_REGISTRY_URI}:latest ${DOCKER_HUB_WORKER_REGISTRY_URI}:${VERSION_TAG}; (( exit_status = exit_status || $? ))
 

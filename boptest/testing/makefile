@@ -14,13 +14,13 @@ build_jm_image:
 	docker build --no-cache --rm -t ${IMG_NAME} .
 
 build_boptest_image:
-	cd .. && docker-compose build
+	cd .. && docker compose build
 
 remove_jm_image:
 	docker rmi ${IMG_NAME}
 
 remove_boptest_image:
-	cd .. && docker-compose down
+	cd .. && docker compose down
 
 run_jm:
 	$(COMMAND_RUN)
@@ -87,6 +87,7 @@ test_%:
 	make -C ../ provision TESTCASE=$*
 # Python and checks
 	cd .. && python testing/test_$*.py
+	python report.py
 
 test_parser:
 	make run_jm
@@ -96,6 +97,8 @@ test_parser:
 	docker cp ${IMG_NAME}:/usr/local/testing/references/parser ./references
 	docker cp ${IMG_NAME}:/usr/local/testing/test_parser.log ./test_parser.log
 	make stop_jm
+# Report test results
+	python report.py
 
 test_data:
 # Compile testcase model
@@ -117,6 +120,8 @@ test_data:
 	docker cp ${IMG_NAME}:/usr/local/testing/test_data.log ./test_data.log
 # Stop jm docker container
 	make stop_jm
+# Report test results
+	python report.py
 
 test_forecast:
 # Compile testcase model
@@ -136,6 +141,8 @@ test_forecast:
 	docker cp ${IMG_NAME}:/usr/local/testing/test_forecast.log ./test_forecast.log
 # Stop jm docker container
 	make stop_jm
+# Report test results
+	python report.py
 
 test_kpis:
 # Compile testcase model
@@ -155,13 +162,15 @@ test_kpis:
 	docker cp ${IMG_NAME}:/usr/local/testing/test_kpis.log ./test_kpis.log
 # Stop jm docker container
 	make stop_jm
+# Report test results
+	python report.py
 
 test_readme_commands:
 # Test readme commands work right after instantiation of test case container
 	curl http://127.0.0.1/measurements
 	curl http://127.0.0.1/forecast
 	curl http://127.0.0.1/advance -d '{"oveTSetRooHea_u":293.15,"oveTSetRooHea_activate":1, "oveTSetRooCoo_activate":1,"oveTSetRooCoo_u":298.15}' -H "Content-Type: application/json"
-	cd .. && TESTCASE=testcase2 docker-compose down
+	cd .. && TESTCASE=testcase2 docker compose down
 
 ###############################################################################
 
@@ -184,6 +193,7 @@ test_all:
 	make test_multizone_residential_hydronic
 	make test_singlezone_commercial_hydronic
 	make test_multizone_office_simple_air
+	make test_twozone_apartment_hydronic
 # Remove jm
 	make remove_jm_image
 # Remove boptest base image
